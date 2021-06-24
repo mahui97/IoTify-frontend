@@ -10,7 +10,6 @@ import Search from '@/components/Search'
 import AboutUs from '@/components/AboutUs'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-// import '@/assets/icon-font/iconfont.css'
 import '@/common/css/index.css'
 import '@/assets/icon-font/iconfont.js'
 

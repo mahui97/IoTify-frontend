@@ -35,7 +35,15 @@ npm install element-ui -S
 ```
 3、vscode 插件：`vetur`
 4、安装axios:
-```s
+``` bash
 npm install axios
 ```
 
+## 注意
+这里面`package.json`中有一行代码
+``` json
+"dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 183.173.120.249",
+```
+里面的IP是自己要部署的机器的IP，启动时需要保证这个IP正确。
+
+调用后端的IP在`./src/common/js/api.js`中，`common`记录的都是公用的css或者js，有需要可以从里面找。
