@@ -21,14 +21,21 @@ npm run build --report
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 需要安装的组件：
+
 1、安装webpack-cli等:
+``` bash
 sudo npm install -g webpack-cli
 npm install webpack-cli -D
 npm install style-loader stylus-loader css-loader less --save-dev
 npm install less-loader@4.1.0
+```
 2、安装element-ui:
+``` bash
 npm install element-ui -S
-3、vscode 插件：vetur
+```
+3、vscode 插件：`vetur`
 4、安装axios:
+```s
 npm install axios
+```
 
