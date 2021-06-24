@@ -1,0 +1,68 @@
+.el-header {
+    background-color: #D7D7D7;
+    color: #333;
+    text-align: center;
+    line-height: 60px;
+    padding: 0;
+}
+.el-main {
+    text-align: center;
+    vertical-align: middle;
+    background-color: #F2F2F2;
+    height: 650px;
+}
+.gate-title {
+    font-size: 30px;
+    text-align: center;
+    float: left;
+}
+.icon {
+    width: 60px;
+    height: 60px;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+.icon-devices {
+    /* float: left; */
+    height: 60px;
+    width: 60px;
+    margin: 20px;
+}
+.icon-protocol {
+    height: 60px;
+    width: 60px;
+    margin: 10px;
+}
+.device-number {
+    font-weight: 700px;
+    color: #409EFF;
+    font-size: 40px;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+.handle-id {
+    /* height: 60px; */
+    
+    line-height: 1.7;
+    font-size: 17px;
+    /* flex-wrap: wrap; */
+    word-wrap: break-word;
+    word-break: break-all;
+    font-weight: bold;
+    text-align: left;
+}
+.width500 {
+    width: 500px;
+}
+.scan-time {
+    height: 25px;
+    line-height: 1.7;
+    font-size: 14px;
+    color: #909399;
+    text-align: left;
+}

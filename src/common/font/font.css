@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'Comic Sans MS';
+  src: url-loader('comic\ sans\ ms.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+    font-family: 'kaiti SC regular';
+    src: url-loader('KaitiSC-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'kaiti SC bold';
+    src: url('STKaitiSC-Bold.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
