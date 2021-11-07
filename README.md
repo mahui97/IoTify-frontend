@@ -34,6 +34,7 @@ npm install less-loader@4.1.0
 npm install element-ui -S
 ```
 3、vscode 插件：`vetur`
+
 4、安装axios:
 ``` bash
 npm install axios
