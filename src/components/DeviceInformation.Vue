@@ -127,6 +127,13 @@
         >
           {{ form.phaseShift }}
         </el-form-item>
+        <el-form-item
+          v-if="protocolImg === 6"
+          label="材质"
+          style="text-align: left"
+        >
+          {{ form.texture }}
+        </el-form-item>
       </el-form>
     </el-main>
   </el-container>
@@ -146,7 +153,7 @@ export default {
       form: {
         type: "血氧仪",
         staticID: "4C:3D:12:24:6F:8E",
-        dynamicID: "25/10",
+        dynamicID: "25",
         features: [
           {
             feature: "RSSI",
@@ -154,40 +161,87 @@ export default {
             normalInterval: "10~25",
             status: "正常",
           },
-          {
-            feature: "CSI",
-            value: "10",
-            normalInterval: "8~10",
-            status: "正常",
-          },
+          // {
+          //   feature: "CSI",
+          //   value: "10",
+          //   normalInterval: "8~10",
+          //   status: "正常",
+          // },
         ],
         ipAddress: "192.168.1.4",
+        clockPhase: "",
         phaseShift: "",
+        texture: "",
         isNormal: false,
       },
+      isQRcode: true,
     };
   },
-  methods: {},
+  methods: {
+    hasLetter: function (str) {
+      console.log("hasLetter str: ");
+      console.log(str);
+      for (var i in str) {
+        var asc = str.charCodeAt(i);
+        if ((asc >= 65 && asc <= 90 ) || (asc >= 97 && asc <= 122)) {
+          this.isQRcode = true;
+          return;
+        }
+      }
+      this.isQRcode = false;
+    }
+  },
   created() {
     console.log(this.$route.query);
     this.handleID = this.$route.query.handleID;
     this.lastScanTime = this.$route.query.lastScanTime;
+    this.form.staticID = this.$route.query.staticID;
+    this.form.isNormal = this.$route.query.isNormal;
+
     if (this.$route.query.protocol == "Wi-Fi") {
       this.form.type = "手机";
       this.protocolImg = 1;
       this.form.ipAddress = this.$route.query.ipAddress;
+      var csi = {
+        feature: "CSI",
+        value: "10",
+        normalInterval: "10~25",
+        status: "正常",
+      };
+      this.form.features = this.form.features.concat(csi);
+      this.form.dynamicID = this.form.dynamicID + "/" + csi.value;
     } else if (this.$route.query.protocol == "Bluetooth") {
       this.protocolImg = 2;
+      var bp = {
+        feature: "时钟偏斜",
+        value: "0.2",
+        normalInterval: "-2~2",
+        status: "正常",
+      };
+      this.form.features = this.form.features.concat(bp);
+      this.form.dynamicID = this.form.dynamicID + "/" + bp.value;
     } else if (this.$route.query.protocol == "ZigBee") {
       this.protocolImg = 3;
+      this.form.type = "插座"; // or 开关
     } else if (this.$route.query.protocol == "RFID") {
       this.form.type = "RFID标签";
       this.protocolImg = 5;
       this.form.dynamicID = this.$route.query.phaseShift;
       this.form.phaseShift = this.$route.query.phaseShift;
+    } else if (this.$route.query.protocol == "barcode") {
+      this.protocolImg = 6;
+
+      this.hasLetter(this.form.staticID);
+
+      if(this.isQRcode == true) {
+        this.form.type = "二维码";
+      } else {
+        this.form.type = "条形码";
+      }
+      
+      this.form.dynamicID = this.$route.query.texture;
+      this.form.texture = this.$route.query.texture;
     }
-    this.form.staticID = this.$route.query.staticID;
-    this.form.isNormal = this.$route.query.isNormal;
   },
 };
 </script>

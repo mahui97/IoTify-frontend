@@ -104,11 +104,11 @@
               </el-row>
               <el-row
                 >二维码/条形码：<span class="device-number">{{
-                  ocr.number
+                  barcode.number
                 }}</span></el-row
               >
               <el-row class="scan-time-center"
-                >更新：{{ ocr.lastScanTime | formatDate }}</el-row
+                >更新：{{ barcode.lastScanTime | formatDate }}</el-row
               >
             </el-col>
           </el-row>
@@ -452,7 +452,87 @@
             </el-card>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="二维码/条形码"></el-tab-pane>
+        <el-tab-pane label="二维码/条形码" name="6">
+        <el-row class="abstract">
+            <svg class="icon icon-devices left" aria-hidden="true">
+              <use xlink:href="#icon-qrcode1"></use>
+            </svg>
+            <h3 class="left">
+              共发现了 <span class="device-number">{{ barcode.number }}</span> 个
+              条码标签
+            </h3>
+            <div>
+              <div style="height: 40px"></div>
+              <el-button
+                type="primary"
+                class="scan-button"
+                @click="scanBarcode($event)"
+                >扫描设备</el-button
+              >
+            </div>
+          </el-row>
+          <el-row style="height: 20px"></el-row>
+          <el-row
+            type="card"
+            v-for="(barcodeTag, index) in barcode.devices"
+            :key="index"
+          >
+            <el-card
+              :body-style="{ padding: '0px' }"
+              style="margin-bottom: 20px; height: 80px; border-radius: 10px"
+            >
+              <div>
+                <el-tooltip
+                  v-if="barcodeTag.isNormal === 'False'"
+                  class="item"
+                  effect="dark"
+                  content="该设备正常"
+                  placement="bottom-start"
+                >
+                  <el-image
+                    class="type-image left"
+                    :src="abnormalImageUrl"
+                  ></el-image>
+                </el-tooltip>
+                <el-tooltip
+                  v-else
+                  class="item"
+                  effect="dark"
+                  content="该设备正常"
+                  placement="bottom-start"
+                >
+                  <el-image
+                    class="type-image left"
+                    :src="normalImageUrl"
+                  ></el-image>
+                </el-tooltip>
+              </div>
+              <div class="vertical-bar left"></div>
+              <div class="left">
+                <div class="handle-id width500">{{ barcodeTag.handleID }}</div>
+                <el-row class="scan-time">
+                  上次更新时间：<time class="scan-time">{{
+                    barcode.lastScanTime | formatDate
+                  }}</time>
+                </el-row>
+              </div>
+              <div
+                class="information"
+                @click="getDetails('barcode', barcode.lastScanTime, barcodeTag)"
+              >
+                <el-row class="infor-row">
+                  <svg class="icon icon-yanjing" aria-hidden="true">
+                    <use xlink:href="#icon-yanjing-"></use>
+                  </svg>
+                </el-row>
+                <el-row style="font-size: 15px; line-height: 1.3"
+                  ><span>详情</span></el-row
+                >
+              </div>
+              <div class="vertical-bar right"></div>
+            </el-card>
+          </el-row>
+        </el-tab-pane>
       </el-tabs>
     </el-main>
   </el-container>
@@ -494,7 +574,7 @@ export default {
         lastScanTime: new Date(),
         devices: [],
       },
-      ocr: {
+      barcode: {
         number: 0,
         lastScanTime: new Date(),
         devices: [],
@@ -516,6 +596,8 @@ export default {
         this.scanZigbee(event);
       } else if (tab.name == "5") {
         this.scanRFID(event);
+      } else if (tab.name == "6") {
+        this.scanBarcode(event);
       }
     },
     scanWifi: function (event) {
@@ -574,6 +656,20 @@ export default {
         }
       });
     },
+    scanBarcode: function (event) {
+      let that = this;
+      //从后台获取新的devices数据
+      this.$api.post("/barcode", {}, (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response.data); //请求成功，response为成功信息参数
+          that.barcode.devices = response.data;
+          that.barcode.lastScanTime = new Date();
+          that.barcode.number = response.data.length;
+        } else {
+          console.log(response.message); //请求失败，response为失败信息
+        }
+      }); 
+    },
     scan: function (event) {
       //获取所有设备的数据
       console.log("scaning...");
@@ -599,11 +695,16 @@ export default {
           that.rfid.lastScanTime = new Date();
           that.rfid.devices = response.data.rfid;
 
+          that.barcode.number = response.data.barcode.length;
+          that.barcode.lastScanTime = new Date();
+          that.barcode.devices = response.data.barcode;
+
           that.devicesNumber =
             that.zigbee.number +
             that.wifi.number +
             that.bluetooth.number +
-            that.rfid.number;
+            that.rfid.number + 
+            that.barcode.number;
         } else {
           console.log(response.message); //请求失败，response为失败信息
         }
@@ -619,8 +720,7 @@ export default {
     },
     getDetails: function (ptcl, lst, curDev) {
       console.log(curDev);
-      console.log("protocol:");
-      // console.log(ptcl);
+      console.log(lst);
       var paras = {
         handleID: curDev.handleID,
         protocol: ptcl,
@@ -633,6 +733,8 @@ export default {
         paras.ipAddress = curDev.ipAddress;
       } else if (ptcl == "RFID") {
         paras.phaseShift = curDev.phaseShift;
+      } else if (ptcl == "barcode") {
+        paras.texture = curDev.texture;
       }
       // this.$router.push({name:'device',params:{id: handleId}});
       console.log(paras);
