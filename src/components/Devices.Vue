@@ -56,7 +56,7 @@
                 </svg>
               </el-row>
               <el-row
-                >ZigBee设备：<span class="device-number">{{
+                >Zigbee设备：<span class="device-number">{{
                   zigbee.number
                 }}</span></el-row
               >
@@ -104,11 +104,11 @@
               </el-row>
               <el-row
                 >二维码/条形码：<span class="device-number">{{
-                  barcode.number
+                  ocrcode.number
                 }}</span></el-row
               >
               <el-row class="scan-time-center"
-                >更新：{{ barcode.lastScanTime | formatDate }}</el-row
+                >更新：{{ ocrcode.lastScanTime | formatDate }}</el-row
               >
             </el-col>
           </el-row>
@@ -289,14 +289,14 @@
             </el-card>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="ZigBee设备" name="3">
+        <el-tab-pane label="Zigbee设备" name="3">
           <el-row class="abstract">
             <svg class="icon icon-devices left" aria-hidden="true">
               <use xlink:href="#icon-zuocedaohangshiliangtubiao_ZigBee1"></use>
             </svg>
             <h3 class="left">
               共发现了 <span class="device-number">{{ zigbee.number }}</span> 个
-              ZigBee 设备
+              Zigbee 设备
             </h3>
             <div>
               <div style="height: 40px"></div>
@@ -458,7 +458,7 @@
               <use xlink:href="#icon-qrcode1"></use>
             </svg>
             <h3 class="left">
-              共发现了 <span class="device-number">{{ barcode.number }}</span> 个
+              共发现了 <span class="device-number">{{ ocrcode.number }}</span> 个
               条码标签
             </h3>
             <div>
@@ -466,7 +466,7 @@
               <el-button
                 type="primary"
                 class="scan-button"
-                @click="scanBarcode($event)"
+                @click="scanocrcode($event)"
                 >扫描设备</el-button
               >
             </div>
@@ -474,7 +474,7 @@
           <el-row style="height: 20px"></el-row>
           <el-row
             type="card"
-            v-for="(barcodeTag, index) in barcode.devices"
+            v-for="(ocrcodeTag, index) in ocrcode.devices"
             :key="index"
           >
             <el-card
@@ -483,7 +483,7 @@
             >
               <div>
                 <el-tooltip
-                  v-if="barcodeTag.isNormal === 'False'"
+                  v-if="ocrcodeTag.isNormal === 'False'"
                   class="item"
                   effect="dark"
                   content="该设备正常"
@@ -509,16 +509,16 @@
               </div>
               <div class="vertical-bar left"></div>
               <div class="left">
-                <div class="handle-id width500">{{ barcodeTag.handleID }}</div>
+                <div class="handle-id width500">{{ ocrcodeTag.handleID }}</div>
                 <el-row class="scan-time">
                   上次更新时间：<time class="scan-time">{{
-                    barcode.lastScanTime | formatDate
+                    ocrcode.lastScanTime | formatDate
                   }}</time>
                 </el-row>
               </div>
               <div
                 class="information"
-                @click="getDetails('barcode', barcode.lastScanTime, barcodeTag)"
+                @click="getDetails('ocrcode', ocrcode.lastScanTime, ocrcodeTag)"
               >
                 <el-row class="infor-row">
                   <svg class="icon icon-yanjing" aria-hidden="true">
@@ -574,7 +574,7 @@ export default {
         lastScanTime: new Date(),
         devices: [],
       },
-      barcode: {
+      ocrcode: {
         number: 0,
         lastScanTime: new Date(),
         devices: [],
@@ -597,7 +597,7 @@ export default {
       } else if (tab.name == "5") {
         this.scanRFID(event);
       } else if (tab.name == "6") {
-        this.scanBarcode(event);
+        this.scanocrcode(event);
       }
     },
     scanWifi: function (event) {
@@ -656,19 +656,19 @@ export default {
         }
       });
     },
-    scanBarcode: function (event) {
+    scanocrcode: function (event) {
       let that = this;
       //从后台获取新的devices数据
-      this.$api.post("/barcode", {}, (response) => {
+      this.$api.post("/ocr", {}, (response) => {
         if (response.status >= 200 && response.status < 300) {
           console.log(response.data); //请求成功，response为成功信息参数
-          that.barcode.devices = response.data;
-          that.barcode.lastScanTime = new Date();
-          that.barcode.number = response.data.length;
+          that.ocrcode.devices = response.data;
+          that.ocrcode.lastScanTime = new Date();
+          that.ocrcode.number = response.data.length;
         } else {
           console.log(response.message); //请求失败，response为失败信息
         }
-      }); 
+      });
     },
     scan: function (event) {
       //获取所有设备的数据
@@ -695,16 +695,16 @@ export default {
           that.rfid.lastScanTime = new Date();
           that.rfid.devices = response.data.rfid;
 
-          that.barcode.number = response.data.barcode.length;
-          that.barcode.lastScanTime = new Date();
-          that.barcode.devices = response.data.barcode;
+          that.ocrcode.number = response.data.ocrcode.length;
+          that.ocrcode.lastScanTime = new Date();
+          that.ocrcode.devices = response.data.ocrcode;
 
           that.devicesNumber =
             that.zigbee.number +
             that.wifi.number +
             that.bluetooth.number +
             that.rfid.number + 
-            that.barcode.number;
+            that.ocrcode.number;
         } else {
           console.log(response.message); //请求失败，response为失败信息
         }
@@ -731,9 +731,13 @@ export default {
       };
       if (ptcl == "Wi-Fi") {
         paras.ipAddress = curDev.ipAddress;
+      } else if (ptcl == "Bluetooth") {
+        paras.offset = curDev.offset;
+        paras.dev_class = curDev.dev_class;
       } else if (ptcl == "RFID") {
         paras.phaseShift = curDev.phaseShift;
-      } else if (ptcl == "barcode") {
+      } else if (ptcl == "ocrcode") {
+        paras.type = curDev.type;
         paras.texture = curDev.texture;
       }
       // this.$router.push({name:'device',params:{id: handleId}});

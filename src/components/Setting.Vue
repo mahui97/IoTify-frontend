@@ -40,7 +40,7 @@ export default {
     data () {
         return {
             scanInterval: 10,
-            dynamicTags: ['Wi-Fi', 'Bluetooth', 'ZigBee', 'RFID', 'LoRa', '二维码/条形码'],
+            dynamicTags: ['Wi-Fi', 'Bluetooth', 'Zigbee', 'RFID', 'LoRa', '二维码/条形码'],
 
         }
     },

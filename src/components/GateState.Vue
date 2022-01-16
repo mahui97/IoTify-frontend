@@ -52,7 +52,7 @@
               </p>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="ZigBee">
+          <el-tab-pane label="Zigbee">
             <svg class="icon icon-devices left" aria-hidden="true">
               <use xlink:href="#icon-zuocedaohangshiliangtubiao_ZigBee"></use>
             </svg>

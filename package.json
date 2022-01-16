@@ -5,7 +5,7 @@
   "author": "麻慧 <mh19@mails.tsinghua.edu.cn>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 183.172.47.84",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 192.168.31.63",
     "start": "npm run dev",
     "build": "node build/build.js"
   },
@@ -29,6 +29,7 @@
     "chalk": "^2.0.1",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.11",
+    "echarts": "^5.2.2",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",

@@ -82,36 +82,43 @@
         disabled
         style="margin-left: 20px"
       >
-        <el-form-item label="设备类型" style="text-align: left">
+        <el-form-item
+          v-if="protocolImg == 1"
+          label="信号强度"
+          style="text-align: left"
+        >
+          {{ form.rssi }}
+        </el-form-item>
+        <el-form-item
+          v-if="protocol == 2"
+          label="设备类型"
+          style="text-align: left"
+        >
+          {{ form.dev_class }}
+        </el-form-item>
+        <el-form-item
+          v-if="protocol == 6"
+          label="设备类型"
+          style="text-align: left"
+        >
           {{ form.type }}
+        </el-form-item>
+        <el-form-item
+          v-if="needBarcodeDevClass"
+          label="设备类型"
+          style="text-align: left"
+        >
+          {{ form.dev_class }}
         </el-form-item>
         <el-form-item label="静态ID" style="text-align: left">
           {{ form.staticID }}
         </el-form-item>
-        <el-form-item label="动态ID" style="text-align: left">
-          {{ form.dynamicID }}
-        </el-form-item>
-        <el-form-item v-if="protocolImg < 4">
-          <el-table
-            ref="singleTable"
-            :data="form.features"
-            highlight-current-row
-            style="width: 450px"
-          >
-            <el-table-column property="feature" width="80"> </el-table-column>
-            <el-table-column property="value" label="设备值" width="120">
-            </el-table-column>
-            <el-table-column
-              property="normalInterval"
-              label="正常区间"
-              width="120"
-            >
-            </el-table-column>
-            <el-table-column property="status" label="状态"> </el-table-column>
-          </el-table>
-          <el-row style="color: orange" v-if="!form.isNormal">
-            表格内红色值为异常值
-          </el-row>
+        <el-form-item
+          v-if="protocolImg == 2"
+          label="时钟偏斜"
+          style="text-align: left"
+        >
+          {{ form.offset }}
         </el-form-item>
         <el-form-item
           v-if="protocolImg === 1"
@@ -129,9 +136,10 @@
         </el-form-item>
         <el-form-item
           v-if="protocolImg === 6"
-          label="材质"
+          label="纹理特征"
           style="text-align: left"
         >
+          <div id="texture_chart" class="chart"></div>
           {{ form.texture }}
         </el-form-item>
       </el-form>
@@ -151,30 +159,16 @@ export default {
       normalImageUrl: require("@/assets/zhengchang.png"),
       abnormalImageUrl: require("@/assets/ic_warning.png"),
       form: {
-        type: "血氧仪",
+        type: "",
         staticID: "4C:3D:12:24:6F:8E",
-        dynamicID: "25",
-        features: [
-          {
-            feature: "RSSI",
-            value: "25",
-            normalInterval: "10~25",
-            status: "正常",
-          },
-          // {
-          //   feature: "CSI",
-          //   value: "10",
-          //   normalInterval: "8~10",
-          //   status: "正常",
-          // },
-        ],
-        ipAddress: "192.168.1.4",
-        clockPhase: "",
+        dev_class: "",
+        offset: 0,
+        ipAddress: "",
         phaseShift: "",
         texture: "",
         isNormal: false,
       },
-      isQRcode: true,
+      needBarcodeDevClass: false,
     };
   },
   methods: {
@@ -183,13 +177,44 @@ export default {
       console.log(str);
       for (var i in str) {
         var asc = str.charCodeAt(i);
-        if ((asc >= 65 && asc <= 90 ) || (asc >= 97 && asc <= 122)) {
+        if ((asc >= 65 && asc <= 90) || (asc >= 97 && asc <= 122)) {
           this.isQRcode = true;
           return;
         }
       }
       this.isQRcode = false;
-    }
+    },
+    drawChart: function (yList) {
+      var len = yValue.length;
+      var xValue = new Array(len);
+      var yValue = new Array(len);
+      for (var i = 0; i < len; i++) {
+        xValue[i] = i;
+      }
+      for (var i = 0; i < len; i++) {
+        if (type(yList[i]) == String) {
+          yValue[i] = parseFloat(yList[i]);
+        } else if (type(yList[i]) == float) {
+          yValue[i] = yList[i];
+        }
+      }
+      let txct = this.$echarts.init(document.getElementById("texture_chart"));
+      txct.setOption({
+        title: { text: "特征直方图" },
+        tooltip: {},
+        xAxis: {
+          data: xValue,
+        },
+        yAxis: {},
+        series: [
+          {
+            name: "特征值",
+            type: "bar",
+            data: yValue,
+          },
+        ],
+      });
+    },
   },
   created() {
     console.log(this.$route.query);
@@ -202,45 +227,34 @@ export default {
       this.form.type = "手机";
       this.protocolImg = 1;
       this.form.ipAddress = this.$route.query.ipAddress;
-      var csi = {
-        feature: "CSI",
-        value: "10",
-        normalInterval: "10~25",
-        status: "正常",
-      };
-      this.form.features = this.form.features.concat(csi);
-      this.form.dynamicID = this.form.dynamicID + "/" + csi.value;
     } else if (this.$route.query.protocol == "Bluetooth") {
       this.protocolImg = 2;
-      var bp = {
-        feature: "时钟偏斜",
-        value: "0.2",
-        normalInterval: "-2~2",
-        status: "正常",
-      };
-      this.form.features = this.form.features.concat(bp);
-      this.form.dynamicID = this.form.dynamicID + "/" + bp.value;
+      this.form.offset = this.$route.query.offset;
+      this.form.dev_class = this.$route.query.dev_class;
     } else if (this.$route.query.protocol == "ZigBee") {
       this.protocolImg = 3;
       this.form.type = "插座"; // or 开关
     } else if (this.$route.query.protocol == "RFID") {
       this.form.type = "RFID标签";
       this.protocolImg = 5;
-      this.form.dynamicID = this.$route.query.phaseShift;
+      // this.form.dynamicID = this.$route.query.phaseShift;
       this.form.phaseShift = this.$route.query.phaseShift;
-    } else if (this.$route.query.protocol == "barcode") {
+    } else if (this.$route.query.protocol == "ocrcode") {
       this.protocolImg = 6;
+      this.form.dev_class = this.$route.query.type;
+      // this.hasLetter(this.form.staticID);
 
-      this.hasLetter(this.form.staticID);
-
-      if(this.isQRcode == true) {
+      if (this.$route.query.type == "QRCODE") {
         this.form.type = "二维码";
       } else {
         this.form.type = "条形码";
+        this.needBarcodeDevClass = true;
       }
-      
-      this.form.dynamicID = this.$route.query.texture;
+      console.log(this.form);
+
+      // this.form.dynamicID = this.$route.query.texture;
       this.form.texture = this.$route.query.texture;
+      // this.drawChart(this.form.texture);
     }
   },
 };
@@ -250,5 +264,9 @@ export default {
   height: 50px;
   width: 50px;
   margin: 15px;
+}
+.chart {
+  height: 300px;
+  width: 600px;
 }
 </style>
