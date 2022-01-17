@@ -3,7 +3,7 @@ import axios from 'axios'
 
 let http = axios.create({
     // baseURL: 'http://62.234.44.237:8888',
-    baseURL: 'http://192.168.31.235:8888',
+    baseURL: 'http://192.168.137.232:8888',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'

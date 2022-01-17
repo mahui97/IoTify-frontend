@@ -4,7 +4,7 @@
       <NavBar></NavBar>
     </el-header>
     <el-main>
-      <el-tabs :tab-position="tabPosition" @tab-click="handleClick">
+      <el-tabs :tab-position="tabPosition">
         <el-tab-pane label="所有设备" name="0">
           <!-- <span slot="label"><i class="el-icon-date"></i> 所有设备</span> -->
           <el-row class="abstract">
@@ -370,7 +370,6 @@
             </el-card>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="LoRa设备" name="4"></el-tab-pane>
         <el-tab-pane label="RFID标签" name="5">
           <el-row class="abstract">
             <svg class="icon icon-devices left" aria-hidden="true">
@@ -730,10 +729,12 @@ export default {
         isNormal: curDev.isNormal,
       };
       if (ptcl == "Wi-Fi") {
-        paras.ipAddress = curDev.ipAddress;
+        paras.rssi = curDev.rssi;
       } else if (ptcl == "Bluetooth") {
         paras.offset = curDev.offset;
         paras.dev_class = curDev.dev_class;
+      } else if (ptcl == "ZigBee") {
+        paras.lqi = curDev.lqi;
       } else if (ptcl == "RFID") {
         paras.phaseShift = curDev.phaseShift;
       } else if (ptcl == "ocrcode") {
@@ -753,7 +754,8 @@ export default {
       clearInterval(this.timer);
     } else {
       this.timer = setInterval(() => {
-        this.scan(event);
+        console.log("Device");
+        // this.scan(event);
         // setTimeout(this.scan(), 0);
       }, 600000);
     }

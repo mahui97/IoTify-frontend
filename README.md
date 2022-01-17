@@ -39,6 +39,10 @@ npm install element-ui -S
 ``` bash
 npm install axios
 ```
+5、安装echarts
+```bash
+npm install echarts --save-dev
+```
 
 ## 注意
 这里面`package.json`中有一行代码

@@ -90,14 +90,14 @@
           {{ form.rssi }}
         </el-form-item>
         <el-form-item
-          v-if="protocol == 2"
+          v-if="protocolImg == 2"
           label="设备类型"
           style="text-align: left"
         >
           {{ form.dev_class }}
         </el-form-item>
         <el-form-item
-          v-if="protocol == 6"
+          v-if="protocolImg == 6"
           label="设备类型"
           style="text-align: left"
         >
@@ -121,15 +121,15 @@
           {{ form.offset }}
         </el-form-item>
         <el-form-item
-          v-if="protocolImg === 1"
-          label="IP地址"
+          v-if="protocolImg == 3"
+          label="链路质量"
           style="text-align: left"
         >
-          {{ form.ipAddress }}
+          {{ form.lqi }}
         </el-form-item>
         <el-form-item
           v-if="protocolImg === 5"
-          label="相位偏移"
+          label="阻抗相位"
           style="text-align: left"
         >
           {{ form.phaseShift }}
@@ -139,8 +139,8 @@
           label="纹理特征"
           style="text-align: left"
         >
-          <div id="texture_chart" class="chart"></div>
-          {{ form.texture }}
+          <div v-if="protocolImg == 6" id="texture_chart" class="chart"></div>
+          <!-- {{ form.texture }} -->
         </el-form-item>
       </el-form>
     </el-main>
@@ -161,8 +161,10 @@ export default {
       form: {
         type: "",
         staticID: "4C:3D:12:24:6F:8E",
+        rssi: 0.0,
         dev_class: "",
         offset: 0,
+        lqi: 0.0,
         ipAddress: "",
         phaseShift: "",
         texture: "",
@@ -185,20 +187,17 @@ export default {
       this.isQRcode = false;
     },
     drawChart: function (yList) {
-      var len = yValue.length;
+      var len = yList.length;
       var xValue = new Array(len);
       var yValue = new Array(len);
       for (var i = 0; i < len; i++) {
         xValue[i] = i;
       }
       for (var i = 0; i < len; i++) {
-        if (type(yList[i]) == String) {
-          yValue[i] = parseFloat(yList[i]);
-        } else if (type(yList[i]) == float) {
-          yValue[i] = yList[i];
-        }
+        yValue[i] = parseFloat(yList[i]);
       }
-      let txct = this.$echarts.init(document.getElementById("texture_chart"));
+      var tmp = document.getElementById("texture_chart");
+      let txct = this.$echarts.init(tmp);
       txct.setOption({
         title: { text: "特征直方图" },
         tooltip: {},
@@ -226,14 +225,14 @@ export default {
     if (this.$route.query.protocol == "Wi-Fi") {
       this.form.type = "手机";
       this.protocolImg = 1;
-      this.form.ipAddress = this.$route.query.ipAddress;
+      this.form.rssi = this.$route.query.rssi;
     } else if (this.$route.query.protocol == "Bluetooth") {
       this.protocolImg = 2;
       this.form.offset = this.$route.query.offset;
       this.form.dev_class = this.$route.query.dev_class;
     } else if (this.$route.query.protocol == "ZigBee") {
       this.protocolImg = 3;
-      this.form.type = "插座"; // or 开关
+      this.form.lqi = this.$route.query.lqi;
     } else if (this.$route.query.protocol == "RFID") {
       this.form.type = "RFID标签";
       this.protocolImg = 5;
@@ -254,7 +253,13 @@ export default {
 
       // this.form.dynamicID = this.$route.query.texture;
       this.form.texture = this.$route.query.texture;
+      
       // this.drawChart(this.form.texture);
+    }
+  },
+  mounted() {
+    if(this.protocolImg == 6) {
+      this.drawChart(this.form.texture);
     }
   },
 };
