@@ -51,7 +51,7 @@ npm run build
 2. 服务器安装nginx
 3. 拷贝`dist/`到服务器某目录下
 ```bash
-scp -p 827 dist/ root@62.234.44.237:/root/
+scp -P 827 dist/ root@62.234.44.237:/root/
 ```
 4. 修改nginx配置
 ```bash
