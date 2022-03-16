@@ -69,21 +69,6 @@
             <el-col :span="8">
               <el-row>
                 <svg class="icon icon-devices" aria-hidden="true">
-                  <use xlink:href="#icon-LoRawulian"></use>
-                </svg>
-              </el-row>
-              <el-row
-                >LoRa设备：<span class="device-number">{{
-                  lora.number
-                }}</span></el-row
-              >
-              <el-row class="scan-time-center"
-                >更新：{{ lora.lastScanTime | formatDate }}</el-row
-              >
-            </el-col>
-            <el-col :span="8">
-              <el-row>
-                <svg class="icon icon-devices" aria-hidden="true">
                   <use xlink:href="#icon-rfid1"></use>
                 </svg>
               </el-row>
@@ -770,6 +755,10 @@ export default {
 };
 </script>
 <style scoped>
+.filled {
+  color: #0c020263;
+  width: 100%
+}
 .abstract {
   vertical-align: bottom;
   text-align: center;

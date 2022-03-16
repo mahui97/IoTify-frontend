@@ -56,13 +56,13 @@
           >
             <use xlink:href="#icon-zuocedaohangshiliangtubiao_ZigBee"></use>
           </svg>
-          <svg
+          <!--<svg
             v-else-if="protocolImg === 4"
             class="icon icon-devices right"
             aria-hidden="true"
           >
             <use xlink:href="#icon-LoRawulian"></use>
-          </svg>
+          </svg>-->
           <svg
             v-else-if="protocolImg === 5"
             class="icon icon-devices right"

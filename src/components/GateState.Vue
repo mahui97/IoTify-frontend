@@ -68,20 +68,7 @@
               </p>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="LoRa">
-            <svg class="icon icon-devices left" aria-hidden="true">
-              <use xlink:href="#icon-LoRawulian"></use>
-            </svg>
-            <div style="float: left">
-              <p><span class="small-title">名称：</span>{{ lora.name }}</p>
-              <p>
-                <span class="small-title">Handle ID:</span>{{ lora.handleID }}
-              </p>
-              <p>
-                <span class="small-title">MAC地址：</span>{{ lora.MACaddress }}
-              </p>
-            </div>
-          </el-tab-pane>
+          
           <el-tab-pane label="RFID">
             <svg class="icon icon-devices left" aria-hidden="true">
               <use xlink:href="#icon-rfid1"></use>

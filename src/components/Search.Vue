@@ -78,7 +78,9 @@ export default {
     },
     methods: {
         search: function() {
-            this.$api.post('/query', {'keyword': this.searchKey}, response => {
+            var data = new FormData();
+            data.append('keyword', this.searchKey);
+            this.$api.post('/query', data, response => {
                 if (response.status >= 200 && response.status < 300) {
                     console.log(response.data);//请求成功，response为成功信息参数
                     if(response.data != '无查询结果！') {
