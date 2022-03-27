@@ -1,5 +1,5 @@
 .el-header {
-    background-color: #D7D7D7;
+    background-color: #444C63;
     color: #333;
     text-align: center;
     line-height: 60px;
@@ -8,8 +8,12 @@
 .el-main {
     text-align: center;
     vertical-align: middle;
-    background-color: #F2F2F2;
+    background-color: #dddddd;
     height: 650px;
+    color: #444C63;
+}
+.el-card {
+    background-color: #f6f6f6;
 }
 .gate-title {
     font-size: 30px;
@@ -36,7 +40,7 @@
 }
 .device-number {
     font-weight: 700px;
-    color: #409EFF;
+    color: #00B5F9;
     font-size: 40px;
 }
 .left {

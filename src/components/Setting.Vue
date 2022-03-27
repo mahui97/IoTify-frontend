@@ -1,6 +1,6 @@
 <template>
     <el-container>
-        <el-header>
+        <el-header class="header">
             <NavBar></NavBar>
         </el-header>
         <el-main>
@@ -56,6 +56,9 @@ export default {
 }
 </script>
 <style scoped>
+.header {
+  background-color: #444C63;
+}
 .icon-wangguan_zaixian {
     height: 100px;
     width: 100px;

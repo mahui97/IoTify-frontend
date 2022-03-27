@@ -2,13 +2,13 @@
     <div class="header">
         <router-link :to="{ path: '/'}">
             <el-image style="height:60px;width:165px;float:left;"
-            :src="require('@/assets/logo-rectangle.jpg')">
+            :src="require('@/assets/logo-rectan.png')">
             </el-image>
         </router-link>
         <el-menu router mode="horizontal" :default-active="$route.path"
         @select="handleSelect"
-        background-color="#D7D7D7"
-        text-color="#000000" active-text-color="#409EFF">
+        background-color="#444C63"
+        text-color="#FFFFFF" active-text-color="#409EFF">
             <el-menu-item index="/gate">网关状态</el-menu-item>
             <el-menu-item index="/devices">设备信息</el-menu-item>
             <el-menu-item index="/setting">设置</el-menu-item>
@@ -64,8 +64,8 @@ export default {
 .header {
     margin: 0;
     padding: 0;
-    background-color: #D7D7D7;
-    color: #333;
+    background-color: #444C63;
+    color: #444C63;
     text-align: center;
     line-height: 60px;
     vertical-align: middle;

@@ -1,9 +1,9 @@
 <template>
   <el-container>
-    <el-header>
+    <el-header class="header">
       <NavBar></NavBar>
     </el-header>
-    <el-main>
+    <el-main class="main">
       <el-tabs :tab-position="tabPosition">
         <el-tab-pane label="所有设备" name="0">
           <!-- <span slot="label"><i class="el-icon-date"></i> 所有设备</span> -->
@@ -590,6 +590,15 @@ export default {
       this.$api.post("/wifi", {}, (response) => {
         if (response.status >= 200 && response.status < 300) {
           console.log(response.data); //请求成功，response为成功信息参数
+          if(response.data == '无查询结果!') {
+            that.wifi.devices = [];
+            that.wifi.lastScanTime = new Date();
+            that.wifi.number = 0;
+          } else {
+            that.wifi.number = response.data.length;
+            that.wifi.lastScanTime = new Date();
+            that.wifi.devices = response.data;
+          }
           that.wifi.number = response.data.length;
           that.wifi.lastScanTime = new Date();
           that.wifi.devices = response.data;
@@ -604,9 +613,15 @@ export default {
       this.$api.post("/bluetooth", {}, (response) => {
         if (response.status >= 200 && response.status < 300) {
           console.log(response.data); //请求成功，response为成功信息参数
-          that.bluetooth.devices = response.data;
-          that.bluetooth.lastScanTime = new Date();
-          that.bluetooth.number = response.data.length;
+          if(response.data == '无查询结果!') {
+            that.bluetooth.devices = [];
+            that.bluetooth.lastScanTime = new Date();
+            that.bluetooth.number = 0;
+          } else {
+            that.bluetooth.devices = response.data;
+            that.bluetooth.lastScanTime = new Date();
+            that.bluetooth.number = response.data.length;
+          }
         } else {
           console.log(response.message); //请求失败，response为失败信息
         }
@@ -618,9 +633,15 @@ export default {
       this.$api.post("/zigbee", {}, (response) => {
         if (response.status >= 200 && response.status < 300) {
           console.log(response.data); //请求成功，response为成功信息参数
-          that.zigbee.devices = response.data;
-          that.zigbee.lastScanTime = new Date();
-          that.zigbee.number = response.data.length;
+          if(response.data == '无查询结果!') {
+            that.zigbee.devices = [];
+            that.zigbee.lastScanTime = new Date();
+            that.zigbee.number = 0;
+          } else {
+            that.zigbee.devices = response.data;
+            that.zigbee.lastScanTime = new Date();
+            that.zigbee.number = response.data.length;
+          }
         } else {
           console.log(response.message); //请求失败，response为失败信息
         }
@@ -632,9 +653,15 @@ export default {
       this.$api.post("/rfid", {}, (response) => {
         if (response.status >= 200 && response.status < 300) {
           console.log(response.data); //请求成功，response为成功信息参数
-          that.rfid.devices = response.data;
-          that.rfid.lastScanTime = new Date();
-          that.rfid.number = response.data.length;
+          if(response.data == '无查询结果!') {
+            that.rfid.devices = [];
+            that.rfid.lastScanTime = new Date();
+            that.rfid.number = 0;
+          } else {
+            that.rfid.devices = response.data;
+            that.rfid.lastScanTime = new Date();
+            that.rfid.number = response.data.length;
+          }
         } else {
           console.log(response.message); //请求失败，response为失败信息
         }
@@ -646,9 +673,15 @@ export default {
       this.$api.post("/ocr", {}, (response) => {
         if (response.status >= 200 && response.status < 300) {
           console.log(response.data); //请求成功，response为成功信息参数
-          that.ocrcode.devices = response.data;
-          that.ocrcode.lastScanTime = new Date();
-          that.ocrcode.number = response.data.length;
+          if(response.data == '无查询结果!') {
+            that.ocrcode.devices = [];
+            that.ocrcode.lastScanTime = new Date();
+            that.ocrcode.number = 0;
+          } else {
+            that.ocrcode.devices = response.data;
+            that.ocrcode.lastScanTime = new Date();
+            that.ocrcode.number = response.data.length;
+          }
         } else {
           console.log(response.message); //请求失败，response为失败信息
         }
@@ -756,22 +789,23 @@ export default {
 </script>
 <style scoped>
 .filled {
-  color: #0c020263;
+  color: #c2c2c2;
   width: 100%
 }
 .abstract {
   vertical-align: bottom;
   text-align: center;
+  color: #444C63;
 }
 .scan-button-center {
   width: 300px;
-  background-color: #409eff;
+  background-color: #444C63;
   color: #ffffff;
 }
 .scan-button {
   float: right;
   width: 200px;
-  background-color: #409eff;
+  background-color: #444C63;
   color: #ffffff;
 }
 /* .el-row {

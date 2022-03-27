@@ -83,7 +83,7 @@ export default {
             this.$api.post('/query', data, response => {
                 if (response.status >= 200 && response.status < 300) {
                     console.log(response.data);//请求成功，response为成功信息参数
-                    if(response.data != '无查询结果！') {
+                    if(response.data != '无查询结果!') {
                         this.devices = response.data;
                         this.lastScanTime = new Date();
                     } else {
@@ -104,8 +104,19 @@ export default {
                 staticID: curDev.staticID,
                 isNormal: curDev.isNormal
             }
-            if(curDev.protocol == 'Wi-Fi') {
-                paras.ipAddress = curDev.ipAddress;
+            var ptcl = paras.protocol;
+            if (ptcl == "Wi-Fi") {
+                paras.rssi = curDev.rssi;
+            } else if (ptcl == "Bluetooth") {
+                paras.offset = curDev.offset;
+                paras.dev_class = curDev.dev_class;
+            } else if (ptcl == "ZigBee") {
+                paras.lqi = curDev.lqi;
+            } else if (ptcl == "RFID") {
+                paras.phaseShift = curDev.phaseShift;
+            } else if (ptcl == "ocrcode") {
+                paras.type = curDev.type;
+                paras.texture = curDev.texture;
             }
             // this.$router.push({name:'device',params:{id: handleId}});
             console.log(paras);
